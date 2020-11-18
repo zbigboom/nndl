@@ -3,6 +3,7 @@ import os
 import torchvision
 from torchvision import transforms
 import numpy as np
+import torch.utils.data
 
 def unpickle(file):
     import pickle
@@ -26,4 +27,4 @@ def load_train_data():
 A,B=load_train_data()
 print(B)
 
-
+torch.utils.data.DataLoader
