@@ -26,8 +26,7 @@ net.add(tf.keras.layers.Conv2D(filters=96,
                             kernel_size=11,
                             strides=4,
                             activation='relu',
-                            padding='same'
-                            input_shape=(227,227,3)))
+                            padding='same'))
 # 第一个汇聚层，最大池化3*3大小步长为2，得到两个27*27*48的特征映射组
 net.add(tf.keras.layers.MaxPool2D(pool_size=3,strides=2))
 # 归一化操作
@@ -41,7 +40,7 @@ net.add(tf.keras.layers.Conv2D(filters=256,
 # 第二个汇聚层，最大池化3*3大小步长为2，得到两个13*13*128
 net.add(tf.keras.layers.MaxPooling2D(pool_size=3,strides=2))
 # 归一化操作
-ner.add(LRN())
+net.add(LRN())
 #第三个卷积层两个路径的融合，用一个3*3*256*384的卷积核步长为1零填充为1，得到两个13*13*192的特征映射组 
 net.add(tf.keras.layers.Conv2D(filters=384,
                                kernel_size=3,
