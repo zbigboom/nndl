@@ -9,6 +9,8 @@ def unpickle(file):
     with open(file,'rb')as fo:
         dict=pickle.load(fo,encoding='bytes')
     return dict
+
+
 def load_train_data():
     train_path = 'E:\python\cifar10\data_batch_1'
     train_data = []
@@ -23,7 +25,6 @@ def load_train_data():
 
     return train_set_data,train_set_labels
 A,B=load_train_data()
-
 print(A)
 class GetLoader(torch.utils.data.Dataset):
     def __init__(self,data_root,data_label):
