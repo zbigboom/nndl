@@ -1,5 +1,4 @@
-import torch
-from torch import nn
+import torch.nn as nn
 
 class net(nn.Module):
     def __init__(self):
