@@ -20,7 +20,7 @@ class LRN(tf.keras.layers.Layer):
 # 数据集为224*224*3的图像输出为1000个类
 # imagenet数据集
 net=tf.keras.models.Sequential()
-# 添加第一个卷积层大小为11*11*48步长为4零填充3，两个卷积核，得到两个55*55*48的特征映射组
+# 添加第一个卷积层大小为11*11*3*48步长为4零填充3，两个卷积核，得到两个55*55*48的特征映射组
 net.add(tf.keras.layers.Conv2D(filters=96,
                             kernel_size=11,
                             strides=4,
@@ -40,7 +40,7 @@ net.add(tf.keras.layers.Conv2D(filters=256,
 net.add(tf.keras.layers.MaxPooling2D(pool_size=3,strides=2))
 # 归一化操作
 net.add(LRN())
-#第三个卷积层两个路径的融合，用一个3*3*256*384的卷积核步长为1零填充为1，得到两个13*13*192的特征映射组 
+# 第三个卷积层两个路径的融合，用一个3*3*256*384的卷积核步长为1零填充为1，得到两个13*13*192的特征映射组
 net.add(tf.keras.layers.Conv2D(filters=384,
                                kernel_size=3,
                                strides=1,
@@ -65,7 +65,7 @@ net.add(tf.keras.layers.MaxPool2D(pool_size=3,strides=2))
 net.add(tf.keras.layers.Flatten())
 # 第一个全链接层激活函数为relu
 net.add(tf.keras.layers.Dense(4096,activation='relu'))
-# 防止过拟合，Droout是使得一定的概率暂时从网络中丢弃，简单来说就是在前向传播时让某个神经元的激活值以一定的概率p停止工作
+# 防止过拟合，Dropout是使得一定的概率暂时从网络中丢弃，简单来说就是在前向传播时让某个神经元的激活值以一定的概率p停止工作
 net.add(tf.keras.layers.Dropout(0.5))
 # 第二个全链接层激活函数为relu
 net.add(tf.keras.layers.Dense(4096,activation='relu'))
