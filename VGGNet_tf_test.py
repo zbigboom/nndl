@@ -90,4 +90,20 @@ net.add(tf.keras.layers.Conv2D(filters=128,
 # pool5
 net.add(tf.keras.layers.MaxPool2D(pool_size=2,strides=2))
 
+net.add(tf.keras.layers.Flatten())
+
+# FC1
+net.add(tf.keras.layers.Dense(4096,activation='relu'))
+net.add(tf.keras.layers.Dropout(0.5))
+# FC2
+net.add(tf.keras.layers.Dense(4096,activation='relu'))
+net.add(tf.keras.layers.Dropout(0.5))
+# FC3 softmax
+net.add(tf.keras.layers.Dense(1000,activation='softmax'))
+
+optimizer=tf.keras.optimizers.SGD(learning_rate=0.9,momentum=0.0,nesterov=False)
+net.compile(loss='sparse_categorical_crossentory',
+            optimizer=optimizer,
+            metrics=['accuracy'])
+
 
