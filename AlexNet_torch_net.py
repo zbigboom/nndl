@@ -1,8 +1,10 @@
-import torch.nn as nn
+import torch
+from torch import nn
 
 class net(nn.Module):
     def __init__(self):
         super(net,self).__init__()
+
         self.conv1=nn.Sequential(nn.Conv2d(in_channels=3,out_channels=96,kernel_size=11,stride=4,padding=3),
                                  nn.ReLU(),
                                  nn.MaxPool2d(kernel_size=3,stride=2,padding=0)

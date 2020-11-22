@@ -1,6 +1,5 @@
 import tensorflow as tf
-import numpy as np
-import matplotlib as plt
+
 
 
 # 局部响应归一化LRN
@@ -79,4 +78,3 @@ optimizer=tf.keras.optimizers.SGD(learning_rate=0.9,momentum=0.0,nesterov=False)
 net.compile(loss='sparse_categorical_crossentropy',
             optimizer=optimizer,
             metrics=['accuracy'])
-net.summary()
