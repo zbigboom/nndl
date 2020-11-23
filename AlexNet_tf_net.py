@@ -1,7 +1,5 @@
 import tensorflow as tf
 
-
-
 # 局部响应归一化LRN
 class LRN(tf.keras.layers.Layer):
   def __init__(self):
@@ -15,7 +13,6 @@ class LRN(tf.keras.layers.Layer):
                        bias=self.bias,
                        alpha=self.alpha,
                        beta=self.beta)
-    
 
 # 数据集为224*224*3的图像输出为1000个类
 # imagenet数据集
