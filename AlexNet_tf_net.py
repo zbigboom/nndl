@@ -75,3 +75,4 @@ optimizer=tf.keras.optimizers.SGD(learning_rate=0.9,momentum=0.0,nesterov=False)
 net.compile(loss='sparse_categorical_crossentropy',
             optimizer=optimizer,
             metrics=['accuracy'])
+
