@@ -276,6 +276,87 @@ model = keras.Model(inouts, x)
 # 模型可视化
 model.summary()
 '''
+# GoogLeNetv1
+
+# 定义卷积层
+def conv2d(inputs,filters,kernel_size,padding='same',strides=1):
+    x=keras.layers.Conv2D(filters=filters,
+                          kernel_size=kernel_size,
+                          strides=strides,
+                          padding=padding)(inputs)
+    x=keras.layers.BatchNormalization()(x)
+    x=keras.layers.Activation('relu')(x)
+    return x
+# 定义模块
+def inception(inputs,filters):
+    branch1x1=conv2d(inputs,filters,1)
+
+    branch3x3=conv2d(inputs,filters,1)
+    branch3x3=conv2d(branch3x3,filters,3)
+
+    branch5x5=conv2d(inputs,filters,1)
+    branch5x5=conv2d(branch5x5,filters,5)
+
+    branchpool=keras.layers.MaxPool2D(pool_size=3,strides=1,padding='same')(inputs)
+    branchpool=conv2d(branchpool,filters,1)
+
+
+    x=keras.layers.concatenate([branch1x1,branch3x3,branch5x5,branchpool],axis=3)
+
+    return x
+
+# 输入数据
+inputs=keras.Input(shape=(224,224,3),)
+# 第一个卷积层7*7*64步长为2
+x=conv2d(inputs,64,7,strides=2)
+# 第一个汇聚层3*3步长为2
+x=keras.layers.MaxPool2D(pool_size=3,strides=2)(x)
+# 第二个卷积层1*1*64步长为1
+x=conv2d(x,64,1)
+# 第三个卷积层3*3*192步长为3
+x=conv2d(x,192,3)
+# 第二个汇聚层3*3步长为2
+x=keras.layers.MaxPool2D(pool_size=3,strides=2)(x)
+# 第一个模块
+x=inception(x,64)
+# 第二个模块
+x=inception(x,128)
+# 第三个汇聚层
+x=keras.layers.MaxPool2D(pool_size=3,strides=2)(x)
+# 第三个模块
+x=inception(x,192)
+
+# 这里输出softmax0
+
+# 第四个模块
+x=inception(x,160)
+# 第五个模块
+x=inception(x,128)
+# 第六个模块
+x=inception(x,112)
+
+# 这里输出softmax1
+
+# 第七个模块
+x=inception(x,256)
+# 第四个汇聚层
+x=keras.layers.MaxPool2D(pool_size=3,strides=2)(x)
+# 第八个模块
+x=inception(x,256)
+# 第九个模块
+x=inception(x,256)
+# 第五个汇聚层
+x=keras.layers.AveragePooling2D(pool_size=7,strides=1,padding='same')(x)
+# 全连接层
+x=keras.layers.Dense(1000,activation='softmax')(x)
+
+model=keras.models.Model(inputs,x)
+model.summary()
+
+
+
+
+
 # VGGNet-16
 '''
 # 定义输入数据的格式
