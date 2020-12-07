@@ -340,7 +340,7 @@ model = keras.models.Model(inputs, FC3)
 model.summary()
 '''
 # ResNet50
-
+'''
 def identity_block(inputs, size, filter):
     filters1, filters2, filters3 = filter
 
@@ -441,4 +441,4 @@ def ResNet50(inputs_shape=(224, 224, 3), classes=1000):
 
 model = ResNet50()
 model.summary()
-
+'''
