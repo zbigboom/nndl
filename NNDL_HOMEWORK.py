@@ -340,105 +340,93 @@ model = keras.models.Model(inputs, FC3)
 model.summary()
 '''
 # ResNet50
-'''
-def identity_block(inputs, size, filters, stage, block):
-    filters1, filters2, filters3 = filters
 
-    conv_name_base = 'res' + str(stage) + block + '_branch'
-    bn_name_base = 'bn' + str(stage) + block + '_branch'
+def identity_block(inputs, size, filter):
+    filters1, filters2, filters3 = filter
+
 
     x = keras.layers.Conv2D(filters=filters1,
-                            kernel_size=1,
-                            name=conv_name_base + '2a')(inputs)
-    x = keras.layers.BatchNormalization(name=bn_name_base + '2a')(x)
+                            kernel_size=1)(inputs)
+    x = keras.layers.BatchNormalization()(x)
     x = keras.layers.Activation('relu')(x)
 
     x = keras.layers.Conv2D(filters=filters2,
                             kernel_size=size,
-                            padding='same',
-                            name=conv_name_base + '2b')(x)
+                            padding='same')(x)
 
-    x = keras.layers.BatchNormalization(name=bn_name_base + '2b')(x)
+    x = keras.layers.BatchNormalization()(x)
     x = keras.layers.Activation('relu')(x)
 
     x = keras.layers.Conv2D(filters=filters3,
-                            kernel_size=1,
-                            name=conv_name_base + '2c')(x)
-    x = keras.layers.BatchNormalization(name=bn_name_base + '2c')(x)
+                            kernel_size=1)(x)
+    x = keras.layers.BatchNormalization()(x)
 
     x = keras.layers.add([x, inputs])
     x = keras.layers.Activation('relu')(x)
     return x
 
 
-def conv_block(inputs, size, filters, stage, block, strides=2):
-    filters1, filters2, filters3 = filters
+def conv_block(inputs, size, filter , strides=2):
+    filters1, filters2, filters3 = filter
 
-    conv_name_base = 'res' + str(stage) + block + '_branch'
-    bn_name_base = 'bn' + str(stage) + block + '_branch'
 
     x = keras.layers.Conv2D(filters=filters1,
                             kernel_size=1,
-                            strides=strides,
-                            name=conv_name_base + '2a')(inputs)
-    x = keras.layers.BatchNormalization(name=bn_name_base + '2a')(x)
+                            strides=strides)(inputs)
+    x = keras.layers.BatchNormalization()(x)
     x = keras.layers.Activation('relu')(x)
 
     x = keras.layers.Conv2D(filters=filters2,
                             kernel_size=size,
-                            padding='same',
-                            name=conv_name_base + '2b')(x)
-    x = keras.layers.BatchNormalization(name=bn_name_base + '2b')(x)
+                            padding='same')(x)
+    x = keras.layers.BatchNormalization()(x)
     x = keras.layers.Activation('relu')(x)
 
     x = keras.layers.Conv2D(filters=filters3,
-                            kernel_size=1,
-                            name=conv_name_base + '2c')(x)
-    x = keras.layers.BatchNormalization(name=bn_name_base + '2c')(x)
+                            kernel_size=1)(x)
+    x = keras.layers.BatchNormalization()(x)
 
     shortcut = keras.layers.Conv2D(filters=filters3,
                                    kernel_size=1,
-                                   strides=strides,
-                                   name=conv_name_base + '1')(inputs)
-    shortcut = keras.layers.BatchNormalization(name=bn_name_base + '1')(shortcut)
+                                   strides=strides)(inputs)
+    shortcut = keras.layers.BatchNormalization()(shortcut)
 
     x = keras.layers.add([x, shortcut])
     x = keras.layers.Activation('relu')(x)
     return x
 
 
-def ResNet50(inputs_shape=[224, 224, 3], classes=1000):
+def ResNet50(inputs_shape=(224, 224, 3), classes=1000):
     inputs = keras.layers.Input(shape=inputs_shape)
     x = keras.layers.ZeroPadding2D((3, 3))(inputs)
 
     x = keras.layers.Conv2D(filters=64,
                             kernel_size=7,
-                            strides=2,
-                            name='conv1')(x)
-    x = keras.layers.BatchNormalization(name='bn_conv1')(x)
+                            strides=2)(x)
+    x = keras.layers.BatchNormalization()(x)
     x = keras.layers.Activation('relu')(x)
     x = keras.layers.MaxPool2D(pool_size=3,
                                strides=2)(x)
 
-    x = conv_block(x, 3, [64, 64, 256], stage=2, block='a', strides=1)
-    x = identity_block(x, 3, [64, 64, 256], stage=2, block='b')
-    x = identity_block(x, 3, [64, 64, 256], stage=2, block='c')
+    x = conv_block(x, 3, [64, 64, 256], strides=1)
+    x = identity_block(x, 3, [64, 64, 256])
+    x = identity_block(x, 3, [64, 64, 256])
 
-    x = conv_block(x, 3, [128, 128, 512], stage=3, block='a')
-    x = identity_block(x, 3, [128, 128, 512], stage=3, block='b')
-    x = identity_block(x, 3, [128, 128, 512], stage=3, block='c')
-    x = identity_block(x, 3, [128, 128, 512], stage=3, block='d')
+    x = conv_block(x, 3, [128, 128, 512])
+    x = identity_block(x, 3, [128, 128, 512])
+    x = identity_block(x, 3, [128, 128, 512])
+    x = identity_block(x, 3, [128, 128, 512])
 
-    x = conv_block(x, 3, [256, 256, 1024], stage=4, block='a')
-    x = identity_block(x, 3, [256, 256, 1024], stage=4, block='b')
-    x = identity_block(x, 3, [256, 256, 1024], stage=4, block='c')
-    x = identity_block(x, 3, [256, 256, 1024], stage=4, block='d')
-    x = identity_block(x, 3, [256, 256, 1024], stage=4, block='e')
-    x = identity_block(x, 3, [256, 256, 1024], stage=4, block='f')
+    x = conv_block(x, 3, [256, 256, 1024])
+    x = identity_block(x, 3, [256, 256, 1024])
+    x = identity_block(x, 3, [256, 256, 1024])
+    x = identity_block(x, 3, [256, 256, 1024])
+    x = identity_block(x, 3, [256, 256, 1024])
+    x = identity_block(x, 3, [256, 256, 1024])
 
-    x = conv_block(x, 3, [512, 512, 2048], stage=5, block='a')
-    x = identity_block(x, 3, [512, 512, 2048], stage=5, block='b')
-    x = identity_block(x, 3, [512, 512, 2048], stage=5, block='c')
+    x = conv_block(x, 3, [512, 512, 2048])
+    x = identity_block(x, 3, [512, 512, 2048])
+    x = identity_block(x, 3, [512, 512, 2048])
 
     x = keras.layers.AveragePooling2D(pool_size=7,
                                       name='avg_pool')(x)
@@ -453,4 +441,4 @@ def ResNet50(inputs_shape=[224, 224, 3], classes=1000):
 
 model = ResNet50()
 model.summary()
-'''
+
