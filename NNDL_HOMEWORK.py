@@ -3,47 +3,63 @@ from tensorflow import keras
 
 # AlexNet
 '''
+# 定义输入的数据格式大小为224*224*3
 inputs = keras.Input(shape=(224, 224, 3), )
+# 第一个卷积层11*11*3*96，步长为4，padding=4得到55*55*96的特征映射组
 conv_1 = keras.layers.Conv2D(filters=96,
-                             kernel_size=3,
+                             kernel_size=11,
                              strides=4,
                              activation='relu',
                              padding='same')(inputs)
+# 第一个汇聚层3*3步长为2，得到27*27*96的特征映射组
 pool_1 = keras.layers.MaxPool2D(pool_size=3,
                                 strides=2)(conv_1)
+# 第二个卷积层5*5*48*256，步长为1，padding=2得到27*27*128的特征映射组
 conv_2 = keras.layers.Conv2D(filters=256,
                              kernel_size=5,
                              strides=1,
                              activation='relu',
                              padding='same')(pool_1)
+# 第二个汇聚层3*3步长为2，得到13*13*256的特征映射组
 pool_2 = keras.layers.MaxPool2D(pool_size=3,
                                 strides=2)(conv_2)
+# 第三个卷积层3*3*256*384，步长为1，padding=1得到13*13*384的特征映射组
 conv_3 = keras.layers.Conv2D(filters=384,
                              kernel_size=3,
                              strides=1,
                              activation='relu',
                              padding='same')(pool_2)
+# 第四个卷积层3*3*192*384，步长为1，padding=1得到13*13*384的特征映射组
 conv_4 = keras.layers.Conv2D(filters=384,
-                             kernel_size=5,
+                             kernel_size=3,
                              strides=1,
                              activation='relu',
                              padding='same')(conv_3)
+# 第五个卷积层3*3*192*256，步长为1，padding=1得到13*13*256的特征映射组
 conv_5 = keras.layers.Conv2D(filters=256,
                              kernel_size=5,
                              strides=1,
                              activation='relu',
                              padding='same')(conv_4)
+# 第三个汇聚层3*3，步长为2得到6*6*256的特征映射组
 pool_3 = keras.layers.MaxPool2D(pool_size=3,
                                 strides=2)(conv_5)
+# 拉直，将数据拉直
 flatten = keras.layers.Flatten()(pool_3)
+# 第一个全链接层4096个神经元，激活函数为relu
 FC1 = keras.layers.Dense(4096, activation='relu')(flatten)
+# 第二个全链接层4096个神经元，激活函数为relu
 FC2 = keras.layers.Dense(4096, activation='relu')(FC1)
+# 第三个全链接层1000个神经元，激活函数为softmax
 FC3 = keras.layers.Dense(1000, activation='softmax')(FC2)
+# 构造模型
 model = keras.Model(inputs, FC3)
+# 模型可视化
 model.summary()
 '''
 # GoogLeNet-V3
 '''
+# 定义卷积操作
 def conv2d(x,
            filters,
            num_row,
@@ -51,13 +67,17 @@ def conv2d(x,
            padding='same',
            strides=(1, 1),
            ):
+    
+    # 卷积层
     x = keras.layers.Conv2D(filters=filters,
                             kernel_size=(num_row, num_col),
                             strides=strides,
                             padding=padding,
                             use_bias=False
                             )(x)
+    # 规范化输入缩放和激活操作
     x = keras.layers.BatchNormalization(scale=False)(x)
+    # 激活函数
     x = keras.layers.Activation('relu')(x)
     return x
 
@@ -251,96 +271,124 @@ for i in range(2):
 x = keras.layers.GlobalAveragePooling2D(name='avg_pool')(x)
 x = keras.layers.Dense(1000, activation='softmax', name='predictions')(x)
 
+# 构造模型
 model = keras.Model(inouts, x)
+# 模型可视化
 model.summary()
 '''
 # VGGNet-16
 '''
+# 定义输入数据的格式
 inputs = keras.Input(shape=(224, 224, 3), )
+# 第一个卷积层3*3*64，步长为1padding=2得到224*224*64的特征映射组
 conv_1 = keras.layers.Conv2D(filters=64,
                              kernel_size=3,
                              strides=1,
                              activation='relu',
                              padding='same')(inputs)
+# 第二个卷积层3*3*64，步长为1padding=2得到224*224*64的特征映射组
 conv_2 = keras.layers.Conv2D(filters=64,
                              kernel_size=3,
                              strides=1,
                              activation='relu',
                              padding='same')(conv_1)
+# 第一个汇聚层2*2步长为2得到112*112*128的特征映射组
 pool_1 = keras.layers.MaxPool2D(pool_size=2,
                                 strides=2)(conv_2)
+# 第三个卷积层3*3*128，步长为3padding=2得到112*112*128的特征映射组
 conv_3 = keras.layers.Conv2D(filters=128,
                              kernel_size=3,
                              strides=1,
                              activation='relu',
                              padding='same')(pool_1)
+# 第四个卷积层3*3*128，步长为1padding=2得到112*112*128的特征映射组
 conv_4 = keras.layers.Conv2D(filters=128,
                              kernel_size=3,
                              strides=1,
                              activation='relu',
                              padding='same')(conv_3)
+# 第二个汇聚层2*2步长为2得到56*56*256的特征映射组
 pool_2 = keras.layers.MaxPool2D(pool_size=2,
                                 strides=2)(conv_4)
+# 第五个卷积层3*3*256，步长为1padding=2得到56*56*256的特征映射组
 conv_5 = keras.layers.Conv2D(filters=256,
                              kernel_size=3,
                              strides=1,
                              activation='relu',
                              padding='same')(pool_2)
+# 第六个卷积层3*3*256，步长为1padding=2得到56*56*256的特征映射组
 conv_6 = keras.layers.Conv2D(filters=256,
                              kernel_size=3,
                              strides=1,
                              activation='relu',
                              padding='same')(conv_5)
+# 第七个卷积层3*3*256，步长为1padding=2得到56*56*256的特征映射组
 conv_7 = keras.layers.Conv2D(filters=256,
                              kernel_size=3,
                              strides=1,
                              activation='relu',
                              padding='same')(conv_6)
+# 第三个汇聚层2*2步长为2得到28*28*512的特征映射组
 pool_3 = keras.layers.MaxPool2D(pool_size=2,
                                 strides=2)(conv_7)
+# 第八个卷积层3*3*512，步长为1padding=2得到28*28*512的特征映射组
 conv_8 = keras.layers.Conv2D(filters=512,
                              kernel_size=3,
                              strides=1,
                              activation='relu',
                              padding='same')(pool_3)
+# 第九个卷积层3*3*512，步长为1padding=2得到28*28*512的特征映射组
 conv_9 = keras.layers.Conv2D(filters=512,
                              kernel_size=3,
                              strides=1,
                              activation='relu',
                              padding='same')(conv_8)
+# 第十个卷积层3*3*512，步长为1padding=2得到28*28*512的特征映射组
 conv_10 = keras.layers.Conv2D(filters=512,
                               kernel_size=3,
                               strides=1,
                               activation='relu',
                               padding='same')(conv_9)
+# 第四个汇聚层2*2步长为2得到14*14*128的特征映射组
 pool_4 = keras.layers.MaxPool2D(pool_size=2,
                                 strides=2)(conv_10)
+# 第十一个卷积层3*3*512，步长为1padding=2得到14*14*512的特征映射组
 conv_11 = keras.layers.Conv2D(filters=512,
                               kernel_size=3,
                               strides=1,
                               activation='relu',
                               padding='same')(pool_4)
+# 第十二个卷积层3*3*512，步长为1padding=2得到14*14*512的特征映射组
 conv_12 = keras.layers.Conv2D(filters=512,
                               kernel_size=3,
                               strides=1,
                               activation='relu',
                               padding='same')(conv_11)
+# 第十三个卷积层3*3*512，步长为1padding=2得到14*14*512的特征映射组
 conv_13 = keras.layers.Conv2D(filters=512,
                               kernel_size=3,
                               strides=1,
                               activation='relu',
                               padding='same')(conv_12)
+# 第五个汇聚层2*2步长为2得到7*7*512
 pool_5 = keras.layers.MaxPool2D(pool_size=2,
                                 strides=2)(conv_13)
+# 拉直，将数据拉直
 flatten = keras.layers.Flatten()(pool_5)
+# 第一个全链接层4096个神经元，激活函数为relu
 FC1 = keras.layers.Dense(4096, activation='relu')(flatten)
+# 第二个全链接层4096个神经元，激活函数为relu
 FC2 = keras.layers.Dense(4096, activation='relu')(FC1)
+# 第三个全链接层1000个神经元，激活函数为softmax
 FC3 = keras.layers.Dense(1000, activation='softmax')(FC2)
+# 构造模型
 model = keras.models.Model(inputs, FC3)
+# 模型可视化
 model.summary()
 '''
 # ResNet50
 '''
+# 定义identity block模块，输入和输出维度相同，可以串联，用于加深网络
 def identity_block(inputs, size, filter):
     filters1, filters2, filters3 = filter
 
@@ -365,7 +413,7 @@ def identity_block(inputs, size, filter):
     x = keras.layers.Activation('relu')(x)
     return x
 
-
+# 定义Conv Block模块，输入和输出的维度是不一样的，所以不能串联
 def conv_block(inputs, size, filter , strides=2):
     filters1, filters2, filters3 = filter
 
@@ -385,12 +433,12 @@ def conv_block(inputs, size, filter , strides=2):
     x = keras.layers.Conv2D(filters=filters3,
                             kernel_size=1)(x)
     x = keras.layers.BatchNormalization()(x)
-
+    # 短的路径
     shortcut = keras.layers.Conv2D(filters=filters3,
                                    kernel_size=1,
                                    strides=strides)(inputs)
     shortcut = keras.layers.BatchNormalization()(shortcut)
-
+    # 路径合并
     x = keras.layers.add([x, shortcut])
     x = keras.layers.Activation('relu')(x)
     return x
