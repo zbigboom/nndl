@@ -57,6 +57,8 @@ model = keras.Model(inputs, FC3)
 # 模型可视化
 model.summary()
 '''
+
+
 # GoogLeNet-V3
 '''
 # 定义卷积操作
@@ -278,6 +280,9 @@ model.summary()
 '''
 # GoogLeNetv1
 
+
+
+'''
 # 定义卷积层
 def conv2d(inputs,filters,kernel_size,padding='same',strides=1):
     x=keras.layers.Conv2D(filters=filters,
@@ -352,7 +357,7 @@ x=keras.layers.Dense(1000,activation='softmax')(x)
 
 model=keras.models.Model(inputs,x)
 model.summary()
-
+'''
 
 
 
@@ -467,6 +472,10 @@ model = keras.models.Model(inputs, FC3)
 # 模型可视化
 model.summary()
 '''
+
+
+
+
 # ResNet50
 '''
 # 定义identity block模块，输入和输出维度相同，可以串联，用于加深网络
