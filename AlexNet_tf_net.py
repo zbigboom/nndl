@@ -8,13 +8,13 @@ class LRN(tf.keras.layers.Layer):
         self.depth_radius = 2
         self.bias = 1
         self.alpha = 1e-4
-        self.beata = 0.75
+        self.beta = 0.75
 
-        def call(self, x):
-            return tf.nn.lrn(x, depth_radius=self.depth_radius,
-                             bias=self.bias,
-                             alpha=self.alpha,
-                             beta=self.beta)
+    def call(self, x):
+        return tf.nn.lrn(x, depth_radius=self.depth_radius,
+                         bias=self.bias,
+                         alpha=self.alpha,
+                         beta=self.beta)
 
 
 # 数据集为224*224*3的图像输出为1000个类
