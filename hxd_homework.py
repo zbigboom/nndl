@@ -6,6 +6,7 @@ from tensorflow.keras.layers import Dense, Dropout, Flatten
 # 屏蔽通知信息和警告信息
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
+
 def mnist_dataset():
     # 下载mnist数据集
     (x, y), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
@@ -20,7 +21,7 @@ def mnist_dataset():
 
     test_ds = tf.data.Dataset.from_tensor_slices((x_test, y_test))
     test_ds = test_ds.map(prepare_mnist_features_and_labels)
-    test_ds = test_ds.take(20000).shuffle(20000).batch(2000)# 这里改为2000因为我的cpu跑不了20000
+    test_ds = test_ds.take(20000).shuffle(20000).batch(5000)# 这里改为5000因为我的cpu跑不了20000
     return ds, test_ds
 
 
@@ -34,42 +35,43 @@ def prepare_mnist_features_and_labels(x, y):
 class myConvModel(tf.keras.Model):
     def __init__(self):
         super(myConvModel, self).__init__()
-        # 第一个卷积层5*5*64步长为1
-        self.conv1 = Conv2D(filters=64,
-                            kernel_size=3,
+        # 第一个卷积层5*5*64
+        self.conv1 = Conv2D(filters=32,
+                            kernel_size=7,
                             strides=1,
                             activation='relu',
                             padding='same')
-        # 第一个汇聚层最大池化3*3步长为2
+        # 第一个汇聚层最大池化3*3
         self.pool1 = MaxPool2D(pool_size=3, strides=2, padding='same')
-        # 第二个卷积层3*3*64步长为1
+        # 第二个卷积层3*3*64
         self.conv2 = Conv2D(filters=64,
-                            kernel_size=3,
+                            kernel_size=5,
                             strides=1,
                             activation='relu',
                             padding='same')
-        # 第二个汇聚层最大池化3*3步长为2
+        # 第二个汇聚层最大池化3*3
         self.pool2 = MaxPool2D(pool_size=3, strides=2, padding='same')
-        # 第三个卷积层3*3*128步长为1
+        # 第三个卷积层3*3*128
         self.conv3 = Conv2D(filters=128,
                             kernel_size=3,
                             strides=1,
                             activation='relu',
                             padding='same')
-        # 第四个卷积层3*3*128步长为1
-        self.conv4 = Conv2D(filters=128,
-                            kernel_size=3,
-                            strides=1,
-                            activation='relu',
-                            padding='same')
-        # 第五个卷积层3*3*256步长为1
-        self.conv5 = Conv2D(filters=256,
-                            kernel_size=3,
-                            strides=1,
-                            activation='relu',
-                            padding='same')
-        # 第三个汇聚层最大池化3*3步长为2
-        self.pool3 = MaxPool2D(pool_size=3, strides=2, padding='same')
+        self.pool3=MaxPool2D(pool_size=2,strides=2,padding='same')
+        # # 第四个卷积层3*3*128
+        # self.conv4 = Conv2D(filters=384,
+        #                     kernel_size=3,
+        #                     strides=1,
+        #                     activation='relu',
+        #                     padding='same')
+        # # 第五个卷积层3*3*256
+        # self.conv5 = Conv2D(filters=256,
+        #                     kernel_size=3,
+        #                     strides=1,
+        #                     activation='relu',
+        #                     padding='same')
+        # # 第三个汇聚层最大池化3*3
+        # self.pool3 = MaxPool2D(pool_size=2, strides=2, padding='same')
         # 数据拉直
         self.flat = Flatten()
         # 第一个全连接层
@@ -92,9 +94,9 @@ class myConvModel(tf.keras.Model):
         conv2 = self.conv2(pool1)
         pool2 = self.pool2(conv2)
         conv3 = self.conv3(pool2)
-        conv4 = self.conv4(conv3)
-        conv5 = self.conv5(conv4)
-        pool3 = self.pool3(conv5)
+        # conv4 = self.conv4(conv3)
+        # conv5 = self.conv5(conv4)
+        pool3 = self.pool3(conv3)
         flat = self.flat(pool3)
         dense1 = self.dense1(flat)
         dro1=self.dro1(dense1)
