@@ -35,7 +35,7 @@ def prepare_mnist_features_and_labels(x, y):
 class myConvModel(tf.keras.Model):
     def __init__(self):
         super(myConvModel, self).__init__()
-        # 第一个卷积层5*5*64
+        # 第一个卷积层7*7*32
         self.conv1 = Conv2D(filters=32,
                             kernel_size=7,
                             strides=1,
@@ -43,7 +43,7 @@ class myConvModel(tf.keras.Model):
                             padding='same')
         # 第一个汇聚层最大池化3*3
         self.pool1 = MaxPool2D(pool_size=3, strides=2, padding='same')
-        # 第二个卷积层3*3*64
+        # 第二个卷积层5*5*64
         self.conv2 = Conv2D(filters=64,
                             kernel_size=5,
                             strides=1,
@@ -57,21 +57,9 @@ class myConvModel(tf.keras.Model):
                             strides=1,
                             activation='relu',
                             padding='same')
+        # 第三个汇聚层最大池化3*3
         self.pool3=MaxPool2D(pool_size=2,strides=2,padding='same')
-        # # 第四个卷积层3*3*128
-        # self.conv4 = Conv2D(filters=384,
-        #                     kernel_size=3,
-        #                     strides=1,
-        #                     activation='relu',
-        #                     padding='same')
-        # # 第五个卷积层3*3*256
-        # self.conv5 = Conv2D(filters=256,
-        #                     kernel_size=3,
-        #                     strides=1,
-        #                     activation='relu',
-        #                     padding='same')
-        # # 第三个汇聚层最大池化3*3
-        # self.pool3 = MaxPool2D(pool_size=2, strides=2, padding='same')
+
         # 数据拉直
         self.flat = Flatten()
         # 第一个全连接层
@@ -94,8 +82,6 @@ class myConvModel(tf.keras.Model):
         conv2 = self.conv2(pool1)
         pool2 = self.pool2(conv2)
         conv3 = self.conv3(pool2)
-        # conv4 = self.conv4(conv3)
-        # conv5 = self.conv5(conv4)
         pool3 = self.pool3(conv3)
         flat = self.flat(pool3)
         dense1 = self.dense1(flat)
