@@ -63,11 +63,11 @@ class myConvModel(tf.keras.Model):
         # 数据拉直
         self.flat = Flatten()
         # 第一个全连接层
-        self.dense1 = Dense(1024, activation='relu')
+        self.dense1 = Dense(512, activation='relu')
         # 防止过拟合
         self.dro1=Dropout(0.5)
         # 第二个全连接层
-        self.dense2 = Dense(1024, activation='relu')
+        self.dense2 = Dense(512, activation='relu')
         # 防止过拟合
         self.dro2=Dropout(0.5)
         # 第三个全连接层
