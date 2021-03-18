@@ -1,5 +1,6 @@
 tokern=aac79ed6e0e38be1c7c393128bec75104954abf1
 
+/
 c:\\Windows\system32\drivers\etc\hosts
 # GitHub Start
 140.82.114.3    github.com
